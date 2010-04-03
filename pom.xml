@@ -23,7 +23,7 @@
     <groupId>org.liveSense</groupId>
     <artifactId>org.liveSense.service.captha</artifactId>
     <packaging>bundle</packaging>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>liveSense Captcha service</name>
     <description>liveSense Captcha service /session/captcha.jpg</description>
 
@@ -104,7 +104,7 @@
 
     </build>
 	<profiles>
-				<profile>
+		<profile>
 			<id>git-push</id>
 			<build>
 				<plugins>
@@ -168,43 +168,43 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.jcr.api</artifactId>
-            <version>2.0.2-incubator</version>
-            <type>bundle</type>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>4.2.0</version>
+            <type>jar</type>
+			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.api</artifactId>
             <version>2.0.9-SNAPSHOT</version>
             <type>bundle</type>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-            <version>4.2.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.5.9.RC1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <type>jar</type>
+			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.liveSense</groupId>
             <artifactId>org.liveSense.utils</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.0-SNAPSHOT</version>
             <type>bundle</type>
+			<scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.commons.log</artifactId>
+            <version>2.0.7-SNAPSHOT</version>
+            <type>bundle</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
 </project>
+
 
 
 
