@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 import com.octo.captcha.service.CaptchaServiceException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.liveSense.utils.Configurator;
+import org.liveSense.core.Configurator;
 
 /**
  * The <code>CaptchaServlet</code> returns a captcha image and set sessionID for captcha 
