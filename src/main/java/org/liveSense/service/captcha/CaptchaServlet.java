@@ -21,13 +21,16 @@ package org.liveSense.service.captcha;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.UUID;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
@@ -35,34 +38,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.octo.captcha.service.CaptchaServiceException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.liveSense.core.Configurator;
 
 /**
  * The <code>CaptchaServlet</code> returns a captcha image and set sessionID for captcha 
  * servlet.
- * 
- * @scr.component immediate="false" label="%captcha.servlet.name"
- *                description="%captcha.servlet.description"
- * 
- * @scr.service interface="javax.servlet.Servlet"
- * @scr.property name="sling.servlet.paths" value="/session/captcha.jpg"
- * @scr.property name="sling.servlet.methods" values.0="GET"
  */
+@Component(label="%captcha.servlet.name", description="%captcha.servlet.descpription", immediate=false, metatype=true)
+@Service
+@Properties(value={
+	@Property(name="sling.servlet.paths", value="/session/captcha.jpg"),
+	@Property(name="sling.servlet.methods", value={"GET"})
+})
 public class CaptchaServlet extends SlingAllMethodsServlet {
 
+
+    
     private static final long serialVersionUID = -2160335731233369891L;
 
-    /**
-     * @scr.reference
-     */
+    @Reference
     CaptchaService captcha;
 
-    /**
-     * @scr.reference
-     */
-    Configurator configurator;
 
     /** default log */
     private final Logger log = LoggerFactory.getLogger(CaptchaServlet.class);
@@ -72,26 +67,20 @@ public class CaptchaServlet extends SlingAllMethodsServlet {
             SlingHttpServletResponse response) throws IOException {
 
         byte[] captchaChallengeAsJpeg = null;
+        String captchaId = null;
+        
         // the output stream to render the captcha image as jpeg into
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
             // get the session id that will identify the generated captcha.
             //the same id must be used to validate the response, the session id is a good candidate!
 
-            if (request.getSession() == null) {
-                request.getSession(true).setMaxInactiveInterval(configurator.getSessionTimeout().intValue());
-            }
-            request.getSession().setAttribute("captcha_service", captcha);
-
-            String captchaId = request.getSession().getId();
+            // Generate new captcha ID
+            captchaId = UUID.randomUUID().toString();
 
             // call the ImageCaptchaService getChallenge method
             BufferedImage challenge = captcha.getCaptchaImage(captchaId, request.getLocale());
-
-            // a jpeg encoder
-            JPEGImageEncoder jpegEncoder =
-                    JPEGCodec.createJPEGEncoder(jpegOutputStream);
-            jpegEncoder.encode(challenge);
+            ImageIO.write(challenge, "JPEG", jpegOutputStream);
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -107,10 +96,10 @@ public class CaptchaServlet extends SlingAllMethodsServlet {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
+        captcha.setCaptchaId(request, response, captchaId);
         response.getOutputStream().write(captchaChallengeAsJpeg);
         response.getOutputStream().flush();
         response.getOutputStream().close();
-
     }
 
     @Override
