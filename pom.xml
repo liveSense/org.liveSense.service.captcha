@@ -34,7 +34,7 @@
     <artifactId>org.liveSense.service.captha</artifactId>
     <packaging>bundle</packaging>
     <version>1.0.1-SNAPSHOT</version>
-    <name>liveSense Captcha service</name>
+    <name>liveSense :: Service :: Captcha</name>
     <description>liveSense Captcha service /session/captcha.jpg</description>
 
     <build>
