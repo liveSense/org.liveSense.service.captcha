@@ -8,7 +8,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Deactivate;
+import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.PropertyOption;
 import org.apache.felix.scr.annotations.Reference;
@@ -16,13 +19,16 @@ import org.apache.felix.scr.annotations.Service;
 import org.liveSense.core.Configurator;
 import org.osgi.service.component.ComponentContext;
 
-import com.octo.captcha.service.CaptchaServiceException;
-import com.octo.captcha.service.captchastore.FastHashMapCaptchaStore;
-import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
-
 /** Captcha service */
 
 @Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = false, metatype = true)
+
+@Properties(value={
+	@Property(name = CaptchaServiceImpl.PAR_STORAGE, value = CaptchaServiceImpl.DEFAULT_STORAGE, options = {
+			@PropertyOption(name = CaptchaServiceImpl.STORAGE_COOKIE, value = "Cookie"),
+			@PropertyOption(name = CaptchaServiceImpl.STORAGE_SESSION_ATTRIBUTE, value = "Session Attribute") 
+	})
+})
 @Service
 public class CaptchaServiceImpl implements CaptchaService {
 
@@ -30,55 +36,50 @@ public class CaptchaServiceImpl implements CaptchaService {
 	 * The value of the parameter indicating the use of a Cookie to store the
 	 * authentication data.
 	 */
-	private static final String STORAGE_COOKIE = "cookie";
+	public static final String STORAGE_COOKIE = "cookie";
 
 	/**
 	 * The value of the parameter indicating the use of a session attribute to
 	 * store the authentication data.
 	 */
-	private static final String STORAGE_SESSION_ATTRIBUTE = "session";
+	public static final String STORAGE_SESSION_ATTRIBUTE = "session";
 
 	/**
 	 * To be used to determine if the chalange ID comes from a cookie or from a
 	 * session attribute.
 	 */
-	private static final String DEFAULT_STORAGE = STORAGE_COOKIE;
-	private static final String PAR_STORAGE = "captcha.storage";
+	public static final String DEFAULT_STORAGE = STORAGE_COOKIE;
+	public static final String PAR_STORAGE = "captcha.storage";
 
-	private static final String PAR_CAPTCHA_ATTRIBUTE_NAME = "captcha.uid";
+	public static final String PAR_CAPTCHA_ATTRIBUTE_NAME = "captcha.uid";
 
-	@Property(name = PAR_STORAGE, value = DEFAULT_STORAGE, options = {
-			@PropertyOption(name = STORAGE_COOKIE, value = "Cookie"),
-			@PropertyOption(name = STORAGE_SESSION_ATTRIBUTE, value = "Session Attribute") })
 	private final String authStorageType = DEFAULT_STORAGE;
 
 	@Reference
 	Configurator configurator;
 
-	private static DefaultManageableImageCaptchaService instance;
-
+	@Reference
+	CaptchaEngine engine;
+	
+	@Activate
 	protected void activate(ComponentContext componentContext) {
-		instance = new DefaultManageableImageCaptchaService(
-				new FastHashMapCaptchaStore(), new DefaultGimpyEngine(), 180,
-				100000, 75000);
+//		engine = new JCaptchaBasedDefaultCaptchaEngine();
+//		engine.init();
+	}
+
+	@Deactivate
+	protected void deactivate(ComponentContext componentContext) {
+//		engine.close();
 	}
 
 	@Override
 	public BufferedImage getCaptchaImage(String captchaId, Locale locale) {
-		BufferedImage ret = null;
-		for (int i=0; i<3; i++) {
-			try {
-				ret = instance.getImageChallengeForID(captchaId, locale);
-				return ret;
-			} catch (CaptchaServiceException e) {
-			}
-		}
-		return instance.getImageChallengeForID(captchaId, locale);
+		return engine.getImage(captchaId, null, locale);
 	}
 
 	@Override
 	public boolean validateCapthaResponse(String captchaId, String response) {
-		return instance.validateResponseForID(captchaId, response);
+		return engine.validateResponse(captchaId, response);
 	}
 
 	@Override
@@ -140,5 +141,13 @@ public class CaptchaServiceImpl implements CaptchaService {
 
 		}
 	}
+
+	@Override
+	public void setCustomCaptchaEngine(CaptchaEngine engine) {
+		if (engine != null)
+			engine.close();
+		this.engine = engine;
+	}
+
 
 }

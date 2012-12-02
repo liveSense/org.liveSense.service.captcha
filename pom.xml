@@ -19,95 +19,137 @@
  */
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-      <parent>
-      <groupId>com.github.livesense</groupId>
-      <artifactId>org.liveSense.parent</artifactId>
-      <version>2-SNAPSHOT</version>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.livesense</groupId>
+		<artifactId>org.liveSense.parent</artifactId>
+		<version>2-SNAPSHOT</version>
 		<relativePath>../org.liveSense.parent</relativePath>
-  </parent>
-  <scm>
-      <connection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</connection>
-      <developerConnection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</developerConnection>
-      <url>https://github.com/liveSense/org.liveSense.service.captha</url>
-  </scm>  
+	</parent>
+	<scm>
+		<connection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</connection>
+		<developerConnection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</developerConnection>
+		<url>https://github.com/liveSense/org.liveSense.service.captha</url>
+	</scm>
 
-    <artifactId>org.liveSense.service.captha</artifactId>
-    <packaging>bundle</packaging>
-    <version>1.0.1-SNAPSHOT</version>
-    <name>liveSense :: Service :: Captcha</name>
-    <description>liveSense Captcha service /session/captcha.jpg</description>
+	<artifactId>org.liveSense.service.captha</artifactId>
+	<packaging>bundle</packaging>
+	<version>1.0.1-SNAPSHOT</version>
+	<name>liveSense :: Service :: Captcha</name>
+	<description>liveSense Captcha service /session/captcha.jpg</description>
 
-    <build>
-        <plugins>
+	<build>
+		<plugins>
 
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-scr-plugin</artifactId>
-                </plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
 
-                        <Export-Package>
-                            org.liveSense.service.captcha.*
-                        </Export-Package>
+						<Export-Package>
+							org.liveSense.service.captcha.*
+						</Export-Package>
 
-                        <Embed-Dependency>
-                            jcaptcha-all
-                        </Embed-Dependency>
+						<Embed-Dependency>
+							jcaptcha,
+							jcaptcha-api,
+							filters,
+							imaging,
+							kaptcha
+						</Embed-Dependency>
 
-                        <Import-Package>
-                            !EDU.oswego.*,
-                            !com.sun.speech.*,
-                            !net.sf.ehcache.*,
-                            !org.acegisecurity.*,
-                            !org.apache.struts.*,
-                            !org.apache.velocity.*,
-                            !org.quartz.*,
-                            !org.roller.*,
-                            !org.springframework.*,
-                            *;resolution:=optional
-                        </Import-Package>
+						<Import-Package>
+							EDU.oswego.*;resolution:=optional,
+							com.sun.speech.*;resolution:=optional,
+							net.sf.ehcache.*;resolution:=optional,
+							org.acegisecurity.*;resolution:=optional,
+							org.apache.struts.*;resolution:=optional,
+							org.apache.velocity.*;resolution:=optional,
+							org.quartz.*;resolution:=optional,
+							org.roller.*;resolution:=optional,
+							org.springframework.*;resolution:=optional,
+							*
+						</Import-Package>
 
-                    </instructions>
-                </configuration>
-            </plugin>
+					</instructions>
+				</configuration>
+			</plugin>
 
-        </plugins>
+		</plugins>
 
-    </build>
-    <dependencies>
-        <dependency>
-            <groupId>com.octo.captcha</groupId>
-            <artifactId>jcaptcha-all</artifactId>
-            <version>1.0-RC6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.livesense</groupId>
-            <artifactId>org.liveSense.core</artifactId>
-        </dependency>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>jcaptcha</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>jcaptcha-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.axet</groupId>
+			<artifactId>kaptcha</artifactId>
+			<version>0.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jhlabs</groupId>
+			<artifactId>filters</artifactId>
+			<version>2.0.235</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jhlabs</groupId>
+			<artifactId>imaging</artifactId>
+			<version>01012005</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.sling</groupId>
+			<artifactId>org.apache.sling.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.livesense</groupId>
+			<artifactId>org.liveSense.core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
 		<dependency>
-        	<groupId>org.apache.felix</groupId>
-        	<artifactId>org.apache.felix.scr.annotations</artifactId>
-        </dependency>
-    </dependencies>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr.annotations</artifactId>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>jahiaRepository</id>
+			<name>Jahia's Maven Repository</name>
+			<url>http://maven.jahia.org/maven2</url>
+		</repository>
+	</repositories>
 </project>
 
 

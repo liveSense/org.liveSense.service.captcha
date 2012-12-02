@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface CaptchaService {
 	
-
+	public void setCustomCaptchaEngine(CaptchaEngine engine);
+	
     public BufferedImage getCaptchaImage(String captchaID, Locale locale);
     
     public boolean validateCapthaResponse(String captchaID, String response);
