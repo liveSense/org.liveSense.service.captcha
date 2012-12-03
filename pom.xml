@@ -32,7 +32,7 @@
 		<url>https://github.com/liveSense/org.liveSense.service.captha</url>
 	</scm>
 
-	<artifactId>org.liveSense.service.captha</artifactId>
+	<artifactId>org.liveSense.service.captcha</artifactId>
 	<packaging>bundle</packaging>
 	<version>1.0.1-SNAPSHOT</version>
 	<name>liveSense :: Service :: Captcha</name>

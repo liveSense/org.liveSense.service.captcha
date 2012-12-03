@@ -36,6 +36,8 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
+import org.apache.felix.scr.annotations.ReferenceCardinality;
+import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -61,7 +63,7 @@ public class CaptchaServlet extends SlingAllMethodsServlet {
 
 	private static final long serialVersionUID = -2160335731233369891L;
 
-	@Reference
+	@Reference(cardinality=ReferenceCardinality.MANDATORY_UNARY, policy=ReferencePolicy.DYNAMIC)
 	CaptchaService captcha;
 
 
@@ -85,7 +87,14 @@ public class CaptchaServlet extends SlingAllMethodsServlet {
 			captchaId = UUID.randomUUID().toString();
 
 			// call the ImageCaptchaService getChallenge method
-			BufferedImage challenge = captcha.getCaptchaImage(captchaId, request.getLocale());
+			BufferedImage challenge = null; 
+
+			// If engineName is defined in request parameter, we use it
+			if (request.getParameter("engineName") != null) {
+				challenge = captcha.getCaptchaImage(request.getParameter("engineName"), captchaId, request.getLocale());
+			} else {
+				challenge = captcha.getCaptchaImage(captchaId, request.getLocale());
+			}
 
 			if (request.getRequestURI().toLowerCase().endsWith(".png")) {
 

@@ -18,10 +18,10 @@ import org.osgi.framework.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.util.Config;
 
-@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = false, metatype = true)
+@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = true, metatype = true)
 
 @Properties(value={
-		@Property(name = Constants.SERVICE_RANKING, value = "1") 
+		@Property(name = Constants.SERVICE_RANKING, intValue = 1) 
 })
 @Service
 
@@ -89,5 +89,8 @@ public class KaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 		close();
 	}
 
-
+	@Override
+	public String getName() {
+		return "KaptchaDefault";
+	}
 }

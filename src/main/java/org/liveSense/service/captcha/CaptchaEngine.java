@@ -13,4 +13,5 @@ public interface CaptchaEngine {
 	
 	public void close();
 
+	public String getName();
 }

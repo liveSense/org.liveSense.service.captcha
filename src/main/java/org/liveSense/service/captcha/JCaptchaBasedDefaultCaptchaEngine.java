@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
@@ -15,10 +16,10 @@ import com.octo.captcha.service.CaptchaServiceException;
 import com.octo.captcha.service.captchastore.FastHashMapCaptchaStore;
 import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 
-@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = false, metatype = true)
+@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = true, metatype = true, policy=ConfigurationPolicy.OPTIONAL)
 
 @Properties(value={
-		@Property(name = Constants.SERVICE_RANKING, value = "0") 
+		@Property(name = Constants.SERVICE_RANKING, intValue = 0) 
 })
 @Service
 public class JCaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
@@ -63,5 +64,10 @@ public class JCaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 	@Deactivate
 	protected void deactivate() {
 		close();
+	}
+
+	@Override
+	public String getName() {
+		return "JCaptchaDefault";
 	}
 }
