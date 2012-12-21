@@ -13,15 +13,26 @@ import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
-import org.osgi.framework.Constants;
+import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.osgi.service.component.ComponentContext;
 
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.util.Config;
 
-@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = true, metatype = true)
+
+class KaptchaBasedDefaultCaptchaEngineParameterProvider {
+	public static final String PROP_ENGINE_NAME = "engine.name";
+	public static final String DEFAULT_ENGINE_NAME = "KaptchaDefault";
+
+	public static String getEngineName(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_ENGINE_NAME):DEFAULT_ENGINE_NAME, DEFAULT_ENGINE_NAME);
+	}
+}
+
+@Component(label = "%kaptchadefault.service.name", description = "%kaptchadefault.service.description", immediate = true, metatype = true)
 
 @Properties(value={
-		@Property(name = Constants.SERVICE_RANKING, intValue = 1) 
+		@Property(label="%kaptchadefault.name", description="%kaptchadefault.name.description", name = KaptchaBasedDefaultCaptchaEngineParameterProvider.PROP_ENGINE_NAME,  value=KaptchaBasedDefaultCaptchaEngineParameterProvider.DEFAULT_ENGINE_NAME)
 })
 @Service
 
@@ -35,7 +46,7 @@ public class KaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 
 	private String sessionKeyDateValue = null;
 
-	
+	private String name = KaptchaBasedDefaultCaptchaEngineParameterProvider.DEFAULT_ENGINE_NAME;
 	
 	// TODO Clearing!
 	private final Map<String, String> codeTexts = new ConcurrentHashMap<String, String>();
@@ -80,7 +91,8 @@ public class KaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 
 
 	@Activate
-	protected void activate() {
+	protected void activate(ComponentContext context) {
+		this.name = KaptchaBasedDefaultCaptchaEngineParameterProvider.getEngineName(context);
 		init();
 	}
 
@@ -91,6 +103,6 @@ public class KaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 
 	@Override
 	public String getName() {
-		return "KaptchaDefault";
+		return name;
 	}
 }

@@ -5,25 +5,38 @@ import java.util.Locale;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
-import org.osgi.framework.Constants;
+import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.osgi.service.component.ComponentContext;
 
 import com.octo.captcha.service.CaptchaServiceException;
 import com.octo.captcha.service.captchastore.FastHashMapCaptchaStore;
 import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 
-@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = true, metatype = true, policy=ConfigurationPolicy.OPTIONAL)
+class JCaptchaBasedDefaultCaptchaEngineParameterProvider {
+	public static final String PROP_ENGINE_NAME = "engine.name";
+	public static final String DEFAULT_ENGINE_NAME = "JCaptchaDefault";
+
+	public static String getEngineName(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_ENGINE_NAME):DEFAULT_ENGINE_NAME, DEFAULT_ENGINE_NAME);
+	}
+}
+
+@Component(label = "%jcaptchadefault.service.name", description = "%jcaptchadefault.service.description", immediate = true, metatype = true)
 
 @Properties(value={
-		@Property(name = Constants.SERVICE_RANKING, intValue = 0) 
+		@Property(label="%jcaptchadefault.name", description="%jcaptchadefault.name.description", name = JCaptchaBasedDefaultCaptchaEngineParameterProvider.PROP_ENGINE_NAME,  value=JCaptchaBasedDefaultCaptchaEngineParameterProvider.DEFAULT_ENGINE_NAME)
 })
 @Service
 public class JCaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
+
+	
 	private DefaultManageableImageCaptchaService instance;
+	private String name = JCaptchaBasedDefaultCaptchaEngineParameterProvider.DEFAULT_ENGINE_NAME;
+			
 	@Override
 	public BufferedImage getImage(String id, String text, Locale locale) {
 		BufferedImage ret = null;
@@ -57,7 +70,8 @@ public class JCaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 	
 
 	@Activate
-	protected void activate() {
+	protected void activate(ComponentContext context) {
+		name = JCaptchaBasedDefaultCaptchaEngineParameterProvider.getEngineName(context);
 		init();
 	}
 	
@@ -68,6 +82,6 @@ public class JCaptchaBasedDefaultCaptchaEngine implements CaptchaEngine {
 
 	@Override
 	public String getName() {
-		return "JCaptchaDefault";
+		return name;
 	}
 }

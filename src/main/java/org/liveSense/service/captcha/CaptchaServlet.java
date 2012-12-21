@@ -51,11 +51,11 @@ import com.octo.captcha.service.CaptchaServiceException;
  * The <code>CaptchaServlet</code> returns a captcha image and set sessionID for captcha 
  * servlet.
  */
-@Component(label="%captcha.servlet.name", description="%captcha.servlet.descpription", immediate=true, metatype=true)
+@Component(label="%captcha.servlet.name", description="%captcha.servlet.description", immediate=true, metatype=true)
 @Service
 @Properties(value={
-		@Property(name="sling.servlet.paths", value={"/session/captcha.jpg", "/session/captcha.png"}),
-		@Property(name="sling.servlet.methods", value={"GET"})
+		@Property(label="%captcha.servlet.path", description="%captcha.servlet.pathdescription", name="sling.servlet.paths", value={"/session/captcha.jpg", "/session/captcha.png"}),
+		@Property(name="sling.servlet.methods", value={"GET"}, propertyPrivate=true)
 })
 public class CaptchaServlet extends SlingAllMethodsServlet {
 

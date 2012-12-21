@@ -15,84 +15,146 @@ import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
 
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.util.Config;
 
-@Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = false, metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE, createPid = true)
+
+class ResizableKaptchaBasedCapthaEngineParameterProvider {
+	public static final String PROP_ENGINE_NAME = "engine.name";
+	public static final String DEFAULT_ENGINE_NAME = "resizableKaptchaDefault";
+
+	public final static String PROP_WIDTH = "resizablekaptcha.width";
+	public final static long DEFAULT_WIDTH = 200;
+
+	public final static String PROP_HEIGHT = "resizablekaptcha.height";
+	public final static long DEFAULT_HEIGHT = 50;
+
+	public final static String PROP_CHARACTERS = "resizablekaptcha.characters";
+	public final static String DEFAULT_CHARACTERS = "abcde2345678gfynmnpwx";
+
+	public final static String PROP_LENGTH = "resizablekaptcha.length";
+	public final static long DEFAULT_LENGTH = 5;
+	
+	public final static String PROP_FONTSIZE = "caresizablekaptchaptcha.fontsize";
+	public final static long DEFAULT_FONTSIZE = 40;
+
+	public final static String PROP_CHARSPACE = "resizablekaptcha.charspace";
+	public final static long DEFAULT_CHARSPACE = 5;
+
+	public final static String PROP_FONTNAMES = "resizablekaptcha.fontnames";
+	public final static String DEFAULT_FONTNAMES = "Arial";
+	
+	public final static String PROP_FONTCOLOR = "resizablekaptcha.fontcolor";
+	public final static String DEFAULT_FONTCOLOR = "black";
+	
+	public final static String PROP_NOISECOLOR = "resizablekaptcha.noisecolor";
+	public final static String DEFAULT_NOISECOLOR = "black";
+	
+	public final static String PROP_BGCLEARFROM = "resizablekaptcha.bgclearfrom";
+	public final static String DEFAULT_BGCLEARFROM = "lightGray";
+
+	public final static String PROP_BGCLEARTO = "resizablekaptcha.bgclearto";
+	public final static String DEFAULT_BGCLEARTO = "white";
+
+	public final static String PROP_BORDER = "resizablekaptcha.border";
+	public final static boolean DEFAULT_BORDER = false;
+
+	public final static String PROP_BORDERCOLOR = "resizablekaptcha.bordercolor";
+	public final static String DEFAULT_BORDERCOLOR = "black";
+	
+	public final static String PROP_BORDERTHICKNESS = "resizablekaptcha.borderthickness";
+	public final static long DEFAULT_BORDERTHICKNESS = 1;
+
+	public static String getEngineName(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_ENGINE_NAME):DEFAULT_ENGINE_NAME, DEFAULT_ENGINE_NAME);
+	}
+
+	public static long getWidth(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_WIDTH):DEFAULT_WIDTH, DEFAULT_WIDTH);
+	}
+	
+	public static long getHeight(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_HEIGHT):DEFAULT_HEIGHT, DEFAULT_HEIGHT);
+	}
+	
+	public static String getCharacters(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_CHARACTERS):DEFAULT_CHARACTERS, DEFAULT_CHARACTERS);
+	}
+	
+	public static long getLength(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_LENGTH):DEFAULT_LENGTH, DEFAULT_LENGTH);
+	}
+	
+	public static long getFontsize(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_FONTSIZE):DEFAULT_FONTSIZE, DEFAULT_FONTSIZE);
+	}
+	
+	public static long getCharspace(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_CHARSPACE):DEFAULT_CHARSPACE, DEFAULT_CHARSPACE);
+	}
+	
+	public static String getFontnames(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_FONTNAMES):DEFAULT_FONTNAMES, DEFAULT_FONTNAMES);
+	}
+	
+	public static String getFontcolor(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_FONTCOLOR):DEFAULT_FONTCOLOR, DEFAULT_FONTCOLOR);
+	}
+	
+	public static String getNoisecolor(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_NOISECOLOR):DEFAULT_NOISECOLOR, DEFAULT_NOISECOLOR);
+	}
+	
+	public static String getBgclearfrom(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_BGCLEARFROM):DEFAULT_BGCLEARFROM, DEFAULT_BGCLEARFROM);
+	}
+	
+	public static String getBgclearto(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_BGCLEARTO):DEFAULT_BGCLEARTO, DEFAULT_BGCLEARTO);
+	}
+	
+	public static boolean getBorder(ComponentContext context) {
+		return PropertiesUtil.toBoolean(context!=null?context.getProperties().get(PROP_BORDER):DEFAULT_BORDER, DEFAULT_BORDER);
+	}
+	
+	public static String getBordercolor(ComponentContext context) {
+		return PropertiesUtil.toString(context!=null?context.getProperties().get(PROP_BORDERCOLOR):DEFAULT_BORDERCOLOR, DEFAULT_BORDERCOLOR);
+	}
+	
+	public static long getBorderthickness(ComponentContext context) {
+		return PropertiesUtil.toLong(context!=null?context.getProperties().get(PROP_BORDERTHICKNESS):DEFAULT_BORDERTHICKNESS, DEFAULT_BORDERTHICKNESS);
+	}
+}
+
+@Component(label = "%resizablekaptcha.service.name", description = "%resizablekaptcha.service.description", immediate = false, metatype = true, configurationFactory = true, policy = ConfigurationPolicy.REQUIRE, createPid = true)
 
 @Properties(value={
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_NAME, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_NAME),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_WIDTH, longValue = 200),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_HEIGHT, longValue = 50),
+		@Property(label = "%resizablekaptcha.name", description="%resizablekaptcha.name.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_ENGINE_NAME, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_ENGINE_NAME),
+		@Property(label = "%resizablekaptcha.width", description="%resizablekaptcha.width.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_WIDTH, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_WIDTH),
+		@Property(label = "%resizablekaptcha.height", description="%resizablekaptcha.height.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_HEIGHT, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_HEIGHT),
 
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_CHARACTERS, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_CHARACTERS),
+		@Property(label = "%resizablekaptcha.characters", description="%resizablekaptcha.characters.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_CHARACTERS, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_CHARACTERS),
 		
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_LENGTH, longValue = 5),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_FONTSIZE, longValue = 40),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_CHARSPACE, longValue = 5),
+		@Property(label = "%resizablekaptcha.length", description="%resizablekaptcha.height.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_LENGTH, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_LENGTH),
+		@Property(label = "%resizablekaptcha.fontsize", description="%resizablekaptcha.fontsize.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_FONTSIZE, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTSIZE),
+		@Property(label = "%resizablekaptcha.charspace", description="%resizablekaptcha.charspace.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_CHARSPACE, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_CHARSPACE),
 		
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_FONTNAMES, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_FONTNAMES),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_FONTCOLOR, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_FONTCOLOR),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_NOISECOLOR, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_NOISECOLOR),
+		@Property(label = "%resizablekaptcha.fontnames", description="%resizablekaptcha.fontnames.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_FONTNAMES, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTNAMES),
+		@Property(label = "%resizablekaptcha.fontcolor", description="%resizablekaptcha.fontcolor.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_FONTCOLOR, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTCOLOR),
+		@Property(label = "%resizablekaptcha.noisecolor", description="%resizablekaptcha.noisecolor.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_NOISECOLOR, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_NOISECOLOR),
 
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_BGCLEARFROM, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_BGCLEARFROM),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_BGCLEARTO, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_BGCLEARTO),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_BORDER, boolValue = false),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_BORDERCOLOR, value = ResizableKaptchaBasedCapthaEngine.DEFAULT_BORDERCOLOR),
-		@Property(name = ResizableKaptchaBasedCapthaEngine.PROP_BORDERTHICKNESS, longValue = 1),
+		@Property(label = "%resizablekaptcha.bgclearfrom", description="%resizablekaptcha.bgclearfrom.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_BGCLEARFROM, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BGCLEARFROM),
+		@Property(label = "%resizablekaptcha.bgclearto", description="%resizablekaptcha.bgclearto.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_BGCLEARTO, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BGCLEARTO),
+		@Property(label = "%resizablekaptcha.border", description="%resizablekaptcha.border.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_BORDER, boolValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDER),
+		@Property(label = "%resizablekaptcha.bordercolor", description="%resizablekaptcha.bordercolor.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_BORDERCOLOR, value = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDERCOLOR),
+		@Property(label = "%resizablekaptcha.borderthickness", description="%resizablekaptcha.borderthickness.description", name = ResizableKaptchaBasedCapthaEngineParameterProvider.PROP_BORDERTHICKNESS, longValue = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDERTHICKNESS)
 		
-		@Property(name = Constants.SERVICE_RANKING, intValue = 1) 
 })
 @Service(value=CaptchaEngine.class, serviceFactory=true)
 public class ResizableKaptchaBasedCapthaEngine implements CaptchaEngine {
 
-	public final static String PROP_NAME = "captcha.name";
-	public final static String DEFAULT_NAME = "resizableDefault";
-
-	public final static String PROP_WIDTH = "captcha.width";
-	public final static Long DEFAULT_WIDTH = new Long(200);
-
-	public final static String PROP_HEIGHT = "captcha.height";
-	public final static Long DEFAULT_HEIGHT = new Long(50);
-
-	public final static String PROP_CHARACTERS = "captcha.characters";
-	public final static String DEFAULT_CHARACTERS = "abcde2345678gfynmnpwx";
-
-	public final static String PROP_LENGTH = "captcha.length";
-	public final static Long DEFAULT_LENGTH = new Long(5);
-	
-	public final static String PROP_FONTSIZE = "captcha.fontsize";
-	public final static Long DEFAULT_FONTSIZE = new Long(40);
-
-	public final static String PROP_CHARSPACE = "captcha.charspace";
-	public final static Long DEFAULT_CHARSPACE = new Long(5);
-
-	public final static String PROP_FONTNAMES = "captcha.fontnames";
-	public final static String DEFAULT_FONTNAMES = "Arial";
-	
-	public final static String PROP_FONTCOLOR = "captcha.fontcolor";
-	public final static String DEFAULT_FONTCOLOR = "black";
-	
-	public final static String PROP_NOISECOLOR = "captcha.noisecolor";
-	public final static String DEFAULT_NOISECOLOR = "black";
-	
-	public final static String PROP_BGCLEARFROM = "captcha.bgclearfrom";
-	public final static String DEFAULT_BGCLEARFROM = "lightGray";
-
-	public final static String PROP_BGCLEARTO = "captcha.bgclearto";
-	public final static String DEFAULT_BGCLEARTO = "white";
-
-	public final static String PROP_BORDER = "captcha.border";
-	public final static Boolean DEFAULT_BORDER = false;
-
-	public final static String PROP_BORDERCOLOR = "captcha.bordercolor";
-	public final static String DEFAULT_BORDERCOLOR = "black";
-	
-	public final static String PROP_BORDERTHICKNESS = "captcha.borderthickness";
-	public final static Long DEFAULT_BORDERTHICKNESS = new Long(1);
 
 	
 	private final java.util.Properties props = new java.util.Properties();
@@ -103,21 +165,21 @@ public class ResizableKaptchaBasedCapthaEngine implements CaptchaEngine {
 
 	private String sessionKeyDateValue = null;
 	
-	private Long width = DEFAULT_WIDTH;
-	private Long height = DEFAULT_HEIGHT;
-	private String name = DEFAULT_NAME;
-	private String characters = DEFAULT_CHARACTERS;
-	private Long length = DEFAULT_LENGTH;
-	private Long fontsize = DEFAULT_FONTSIZE;
-	private Long charspace = DEFAULT_CHARSPACE;
-	private String fontnames = DEFAULT_FONTNAMES;
-	private String fontcolor = DEFAULT_FONTCOLOR;
-	private String noisecolor = DEFAULT_NOISECOLOR;
-	private String bgclearfrom = DEFAULT_BGCLEARFROM;
-	private String bgclearto = DEFAULT_BGCLEARTO;
-	private Boolean border = DEFAULT_BORDER;
-	private String bordercolor = DEFAULT_BORDERCOLOR;
-	private Long borderthickness = DEFAULT_BORDERTHICKNESS;
+	private String name = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_ENGINE_NAME;	
+	private Long width = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_WIDTH;
+	private Long height = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_HEIGHT;
+	private String characters = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_CHARACTERS;
+	private Long length = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_LENGTH;
+	private Long fontsize = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTSIZE;
+	private Long charspace = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_CHARSPACE;
+	private String fontnames = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTNAMES;
+	private String fontcolor = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_FONTCOLOR;
+	private String noisecolor = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_NOISECOLOR;
+	private String bgclearfrom = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BGCLEARFROM;
+	private String bgclearto = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BGCLEARTO;
+	private Boolean border = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDER;
+	private String bordercolor = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDERCOLOR;
+	private Long borderthickness = ResizableKaptchaBasedCapthaEngineParameterProvider.DEFAULT_BORDERTHICKNESS;
 
 		// TODO Clearing!
 	private final Map<String, String> codeTexts = new ConcurrentHashMap<String, String>();
@@ -179,21 +241,21 @@ public class ResizableKaptchaBasedCapthaEngine implements CaptchaEngine {
 
 	@Activate
 	protected void activate(ComponentContext context) {
-		width = PropertiesUtil.toLong(context.getProperties().get(PROP_WIDTH), DEFAULT_WIDTH);
-		height = PropertiesUtil.toLong(context.getProperties().get(PROP_HEIGHT), DEFAULT_HEIGHT);
-		name = PropertiesUtil.toString(context.getProperties().get(PROP_NAME), DEFAULT_NAME);
-		characters = PropertiesUtil.toString(context.getProperties().get(PROP_CHARACTERS), DEFAULT_CHARACTERS);
-		length = PropertiesUtil.toLong(context.getProperties().get(PROP_LENGTH), DEFAULT_LENGTH);
-		fontsize = PropertiesUtil.toLong(context.getProperties().get(PROP_FONTSIZE), DEFAULT_FONTSIZE);
-		charspace = PropertiesUtil.toLong(context.getProperties().get(PROP_CHARSPACE), DEFAULT_CHARSPACE);
-		fontnames = PropertiesUtil.toString(context.getProperties().get(PROP_FONTNAMES), DEFAULT_FONTNAMES);
-		fontcolor = PropertiesUtil.toString(context.getProperties().get(PROP_FONTCOLOR), DEFAULT_FONTCOLOR);
-		noisecolor = PropertiesUtil.toString(context.getProperties().get(PROP_NOISECOLOR), DEFAULT_NOISECOLOR);
-		bgclearfrom = PropertiesUtil.toString(context.getProperties().get(PROP_BGCLEARFROM), DEFAULT_BGCLEARFROM);
-		bgclearto = PropertiesUtil.toString(context.getProperties().get(PROP_BGCLEARTO), DEFAULT_BGCLEARTO);
-		border = PropertiesUtil.toBoolean(context.getProperties().get(PROP_BORDER), DEFAULT_BORDER);
-		bordercolor = PropertiesUtil.toString(context.getProperties().get(PROP_BORDERCOLOR), DEFAULT_BORDERCOLOR);
-		borderthickness = PropertiesUtil.toLong(context.getProperties().get(PROP_BORDERTHICKNESS), DEFAULT_BORDERTHICKNESS);
+		name = ResizableKaptchaBasedCapthaEngineParameterProvider.getEngineName(context);
+		width = ResizableKaptchaBasedCapthaEngineParameterProvider.getWidth(context);
+		height = ResizableKaptchaBasedCapthaEngineParameterProvider.getHeight(context);
+		characters = ResizableKaptchaBasedCapthaEngineParameterProvider.getCharacters(context);
+		length = ResizableKaptchaBasedCapthaEngineParameterProvider.getLength(context);
+		fontsize = ResizableKaptchaBasedCapthaEngineParameterProvider.getFontsize(context);
+		charspace = ResizableKaptchaBasedCapthaEngineParameterProvider.getCharspace(context);
+		fontnames = ResizableKaptchaBasedCapthaEngineParameterProvider.getFontnames(context);
+		fontcolor = ResizableKaptchaBasedCapthaEngineParameterProvider.getFontcolor(context);
+		noisecolor = ResizableKaptchaBasedCapthaEngineParameterProvider.getNoisecolor(context);
+		bgclearfrom = ResizableKaptchaBasedCapthaEngineParameterProvider.getBgclearfrom(context);
+		bgclearto = ResizableKaptchaBasedCapthaEngineParameterProvider.getBgclearto(context);
+		border = ResizableKaptchaBasedCapthaEngineParameterProvider.getBorder(context);
+		bordercolor = ResizableKaptchaBasedCapthaEngineParameterProvider.getBordercolor(context);
+		borderthickness = ResizableKaptchaBasedCapthaEngineParameterProvider.getBorderthickness(context);
 		init();
 	}
 

@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 @Component(label = "%captcha.service.name", description = "%captcha.service.description", immediate = false, metatype = true)
 
 @Properties(value={
-		@Property(name = CaptchaServiceImpl.PAR_CAPTHA_ENGINE, value = CaptchaServiceImpl.DEFAULT_CAPTCHA_ENGINE),
-		@Property(name = CaptchaServiceImpl.PAR_STORAGE, value = CaptchaServiceImpl.DEFAULT_STORAGE, options = {
+		@Property(label="%captcha.service.defaultengine", description="%captcha.service.defaultengine.description", name = CaptchaServiceImpl.PAR_CAPTHA_ENGINE, value = CaptchaServiceImpl.DEFAULT_CAPTCHA_ENGINE),
+		@Property(label="%captcha.service.storage",description="%captcha.service.storage.description", name = CaptchaServiceImpl.PAR_STORAGE, value = CaptchaServiceImpl.DEFAULT_STORAGE, options = {
 				@PropertyOption(name = CaptchaServiceImpl.STORAGE_COOKIE, value = "Cookie"),
 				@PropertyOption(name = CaptchaServiceImpl.STORAGE_SESSION_ATTRIBUTE, value = "Session Attribute") 
 		})
