@@ -13,7 +13,9 @@ public interface CaptchaService {
     public boolean validateCapthaResponse(String captchaID, String response);
 
     public boolean validateCaptchaResponse(HttpServletRequest request, String response);
-    
+
+    public String extractCaptchaIdFromRequest(HttpServletRequest request);
+
     public void setCaptchaId(HttpServletRequest request,
 	    HttpServletResponse response, String captchaId);
 

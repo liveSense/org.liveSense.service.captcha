@@ -123,6 +123,9 @@ public class CaptchaServiceImpl implements CaptchaService {
 	}
 	
 	private CaptchaEngine getCapthaEngineByName(String engineName) {
+		if (engineName == null) {
+			return getDefaultEngine();
+		}
 		if (captchaEngines.containsKey(engineName)) {
 			return captchaEngines.get(engineName);
 		} else {
@@ -140,23 +143,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 	}
 
 	private boolean validateCaptchaResponse(CaptchaEngine engine, HttpServletRequest request, String response) {
-		String captchaId = null;
-		if (authStorageType.equals(STORAGE_COOKIE)) {
-			captchaId = UUID.randomUUID().toString();
-			Cookie[] cookies = request.getCookies();
-			for (int i = 0; i < cookies.length; i++) {
-				Cookie cookie = cookies[i];
-				if (cookie.getName().equals(PAR_CAPTCHA_ATTRIBUTE_NAME)) {
-					captchaId = cookie.getValue();
-				}
-			}
-
-		} else {
-			if (request.getSession() != null) {
-				captchaId = (String)request.getSession().getAttribute(PAR_CAPTCHA_ATTRIBUTE_NAME);
-			}
-		}
-		return validateCaptchaResponse(engine, captchaId, response);
+		return validateCaptchaResponse(engine, extractCaptchaIdFromRequest(request), response);
 	}
 
 	public void setCaptchaId(CaptchaEngine engine, HttpServletRequest request,
@@ -242,6 +229,27 @@ public class CaptchaServiceImpl implements CaptchaService {
 	public void setCaptchaId(HttpServletRequest request,
 			HttpServletResponse response, String captchaId) {
 		setCaptchaId(getDefaultEngine(), request, response, captchaId);
+	}
+
+	@Override
+	public String extractCaptchaIdFromRequest(HttpServletRequest request) {
+		String captchaId = null;
+		if (authStorageType.equals(STORAGE_COOKIE)) {
+			captchaId = UUID.randomUUID().toString();
+			Cookie[] cookies = request.getCookies();
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				if (cookie.getName().equals(PAR_CAPTCHA_ATTRIBUTE_NAME)) {
+					captchaId = cookie.getValue();
+				}
+			}
+
+		} else {
+			if (request.getSession() != null) {
+				captchaId = (String)request.getSession().getAttribute(PAR_CAPTCHA_ATTRIBUTE_NAME);
+			}
+		}
+		return captchaId;
 	}
 
 }
