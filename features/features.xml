@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><features name="liveSense-${liveSense.version}-service-captcha" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+	<feature name="liveSense-service-captcha" version="${liveSense.service.captcha.version}" description="liveSense service captcha">
+        <feature>liveSense-core-base</feature>
+        <feature>liveSense-fragment-com-sun-image-codec-jpeg</feature>
+		<bundle>mvn:com.github.livesense/org.liveSense.service.captcha/${liveSense.service.captcha.version}</bundle>
+	</feature>
+</features>
