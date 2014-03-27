@@ -27,9 +27,9 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<scm>
-		<connection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</connection>
-		<developerConnection>scm:git:git://github.com/liveSense/org.liveSense.service.captha.git</developerConnection>
-		<url>https://github.com/liveSense/org.liveSense.service.captha</url>
+		<connection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</connection>
+		<developerConnection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</developerConnection>
+		<url>https://github.com/liveSense/org.liveSense.service.captcha</url>
 	</scm>
 
 	<artifactId>org.liveSense.service.captcha</artifactId>
