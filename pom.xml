@@ -23,9 +23,10 @@
 	<parent>
 		<groupId>com.github.livesense</groupId>
 		<artifactId>org.liveSense.parent</artifactId>
-		<version>2-SNAPSHOT</version>
+		<version>1.0.3</version>
 		<relativePath>..</relativePath>
 	</parent>
+    <version>1.0.3-SNAPSHOT</version>
 	<scm>
 		<connection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</connection>
 		<developerConnection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</developerConnection>
@@ -34,7 +35,6 @@
 
 	<artifactId>org.liveSense.service.captcha</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.0.1-SNAPSHOT</version>
 	<name>liveSense :: Service :: Captcha</name>
 	<description>liveSense Captcha service /session/captcha.jpg</description>
 
