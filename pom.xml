@@ -26,12 +26,12 @@
 		<version>1.0.4</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<version>1.0.4</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<scm>
 		<connection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</connection>
 		<developerConnection>scm:git:https://github.com/liveSense/org.liveSense.service.captcha.git</developerConnection>
 		<url>https://github.com/liveSense/org.liveSense.service.captcha</url>
-		<tag>1.0.4</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<artifactId>org.liveSense.service.captcha</artifactId>
